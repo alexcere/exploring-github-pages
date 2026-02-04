@@ -25,11 +25,7 @@ jobs:
       - name: Build Site
         run: mdbook build docs
 
-      # 3. CRITICAL: Add .nojekyll to disable the Jekyll builder
-      - name: Create .nojekyll
-        run: touch docs/book/.nojekyll
-
-      # 4. Deploy to gh-pages branch
+      # 3. Deploy to gh-pages branch
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
