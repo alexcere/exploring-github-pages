@@ -1,3 +1,4 @@
+# Force update
 name: Deploy mdBook
 
 on:
