@@ -1,15 +1,13 @@
-# Force update
 name: Deploy mdBook
 
 on:
-  workflow_dispatch: 
   push:
-    branches: ["main"]
-    paths:
-      - 'docs/**' # Only run when docs change
+    branches:
+      - main
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: write  # Required to push to the gh-pages branch
 
 jobs:
   deploy:
@@ -24,13 +22,16 @@ jobs:
           sudo mv mdbook /usr/local/bin/
 
       # 2. Build the Site
-      # We explicitly use the directory path so we don't need to 'cd' manually
       - name: Build Site
         run: mdbook build docs
 
-      # 3. Deploy
+      # 3. CRITICAL: Add .nojekyll to disable the Jekyll builder
+      - name: Create .nojekyll
+        run: touch docs/book/.nojekyll
+
+      # 4. Deploy to gh-pages branch
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: docs/book # mdBook outputs here by default
+          folder: docs/book
