@@ -1,0 +1,39 @@
+name: Deploy mdBook
+
+on:
+  push:
+    branches:
+      - main
+    # Only run if files in the 'docs' folder change
+    paths:
+      - 'docs/**' 
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: docs # Tells the steps to run inside the 'docs' folder
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Installs the latest version of mdBook
+      - name: Setup mdBook
+        uses: peaceiris/actions-mdbook@v1
+        with:
+          mdbook-version: 'latest'
+
+      # Builds the site into docs/book
+      - name: Build mdBook
+        run: mdbook build
+
+      # Deploys the 'book' folder to the gh-pages branch
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: docs/book
